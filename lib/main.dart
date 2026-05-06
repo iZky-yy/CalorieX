@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:caloriex_app/profile_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,11 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CalorieX',
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        fontFamily: 'Poppins',
-      ),
-      home: const LoginPage(),
+      // Gunakan Poppins jika sudah kamu install di pubspec.yaml
+      theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
+      home: const ProfilePage(),
     );
   }
 }
