@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:caloriex_app/profile_page.dart';
+import 'screens/home/home_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,10 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'CalorieX',
-      // Gunakan Poppins jika sudah kamu install di pubspec.yaml
-      theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Poppins'),
-      home: const ProfilePage(),
+      title: 'Fitness UI',
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        scaffoldBackgroundColor: const Color(0xFF031B1A),
+      ),
+      home: const HomeScreen(),
     );
   }
 }

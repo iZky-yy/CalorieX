@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'edit_profile_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-// ==========================================
-// HALAMAN UTAMA PROFIL
-// ==========================================
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -45,7 +42,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 setState(() {
                   currentName = result['name']!;
                   currentEmail = result['email']!;
-                  // Ambil data phone jika kamu mengirimnya dari EditProfilePage
                   if (result.containsKey('phone')) {
                     currentPhone = result['phone']!;
                   }
@@ -76,7 +72,6 @@ class _ProfilePageState extends State<ProfilePage> {
 Widget _buildHeader(String name) {
   return Column(
     children: [
-      // PAKAI ICON SUPAYA TIDAK ERROR ASSET
       CircleAvatar(
         radius: 40,
         backgroundColor: Colors.grey[800],
@@ -252,7 +247,6 @@ Widget _buildMyProgress() {
   );
 }
 
-// Fungsi pembantu untuk membuat baris progress dengan grafik garis mini
 Widget _buildProgressItem(
   String title,
   String value,
@@ -263,7 +257,7 @@ Widget _buildProgressItem(
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
-      color: const Color(0xFF132222), // Warna gelap sesuai mockup
+      color: const Color(0xFF132222),
       borderRadius: BorderRadius.circular(16),
     ),
     child: Row(
@@ -294,7 +288,6 @@ Widget _buildProgressItem(
             ],
           ),
         ),
-        // Grafik Garis Melengkung (Line Chart)
         Expanded(
           flex: 3,
           child: SizedBox(
@@ -311,7 +304,7 @@ Widget _buildProgressItem(
                         .entries
                         .map((e) => FlSpot(e.key.toDouble(), e.value))
                         .toList(),
-                    isCurved: true, // Ini yang bikin garisnya melengkung halus
+                    isCurved: true,
                     color: Colors.greenAccent,
                     barWidth: 2,
                     isStrokeCapRound: true,
