@@ -1,25 +1,65 @@
 import 'package:flutter/material.dart';
+
 import '../../core/constants/app_colors.dart';
 import '../../core/widgets/custom_bottom_navbar.dart';
+import '../../core/widgets/workout_tile.dart';
 
-class WorkoutDetailScreen extends StatelessWidget {
-  const WorkoutDetailScreen({super.key});
+import '../../models/workout_model.dart';
+
+class WorkoutDetailScreen
+    extends StatelessWidget {
+
+  const WorkoutDetailScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+
+    final List<WorkoutModel> workouts = [
+
+      WorkoutModel(
+        title: "Push Up",
+        reps: "3 sets • 12 reps",
+      ),
+
+      WorkoutModel(
+        title: "Bench Press",
+        reps: "3 sets • 10 reps",
+      ),
+
+      WorkoutModel(
+        title: "Bent Over Row",
+        reps: "3 sets • 12 reps",
+      ),
+    ];
+
     return Scaffold(
+
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20),
+          padding:
+              const EdgeInsets.all(20),
+
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+            crossAxisAlignment:
+                CrossAxisAlignment.start,
+
             children: [
+
               ClipRRect(
-                borderRadius: BorderRadius.circular(25),
+
+                borderRadius:
+                    BorderRadius.circular(25),
+
                 child: Image.asset(
                   "assets/images/workout.jpg",
+
                   height: 220,
+
                   width: double.infinity,
+
                   fit: BoxFit.cover,
                 ),
               ),
@@ -28,10 +68,12 @@ class WorkoutDetailScreen extends StatelessWidget {
 
               const Text(
                 "Upper Body Strength",
+
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 28,
-                  fontWeight: FontWeight.bold,
+                  fontWeight:
+                      FontWeight.bold,
                 ),
               ),
 
@@ -39,6 +81,7 @@ class WorkoutDetailScreen extends StatelessWidget {
 
               const Text(
                 "Build strength and definition in your upper body.",
+
                 style: TextStyle(
                   color: Colors.white70,
                 ),
@@ -47,39 +90,55 @@ class WorkoutDetailScreen extends StatelessWidget {
               const SizedBox(height: 25),
 
               Expanded(
-                child: ListView(
-                  children: const [
-                    workoutTile("Push Up", "3 sets • 12 reps"),
-                    workoutTile(
-                        "Dumbbell Bench Press",
-                        "3 sets • 10 reps"),
-                    workoutTile(
-                        "Bent Over Row",
-                        "3 sets • 12 reps"),
-                    workoutTile(
-                        "Shoulder Press",
-                        "3 sets • 10 reps"),
-                  ],
+                child: ListView.builder(
+
+                  itemCount:
+                      workouts.length,
+
+                  itemBuilder: (_, index) {
+
+                    final workout =
+                        workouts[index];
+
+                    return WorkoutTile(
+                      title: workout.title,
+                      subtitle:
+                          workout.reps,
+                    );
+                  },
                 ),
               ),
 
               SizedBox(
                 width: double.infinity,
                 height: 60,
+
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.green,
-                    shape: RoundedRectangleBorder(
+
+                  style:
+                      ElevatedButton.styleFrom(
+
+                    backgroundColor:
+                        AppColors.green,
+
+                    shape:
+                        RoundedRectangleBorder(
                       borderRadius:
-                          BorderRadius.circular(20),
+                          BorderRadius.circular(
+                        20,
+                      ),
                     ),
                   ),
+
                   onPressed: () {},
+
                   child: const Text(
                     "Start Workout",
+
                     style: TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      fontWeight:
+                          FontWeight.bold,
                     ),
                   ),
                 ),
@@ -88,66 +147,10 @@ class WorkoutDetailScreen extends StatelessWidget {
           ),
         ),
       ),
+
       bottomNavigationBar:
-          const CustomBottomNavbar(currentIndex: 2),
-    );
-  }
-}
-
-class workoutTile extends StatelessWidget {
-  final String title;
-  final String subtitle;
-
-  const workoutTile(
-    this.title,
-    this.subtitle, {
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            backgroundColor: AppColors.green,
-            child: Icon(Icons.fitness_center,
-                color: Colors.black),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.white54,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios,
-            color: Colors.white54,
-            size: 16,
-          )
-        ],
+          const CustomBottomNavbar(
+        currentIndex: 2,
       ),
     );
   }

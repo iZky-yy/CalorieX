@@ -2,17 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 
-class MealCard extends StatelessWidget {
+class WorkoutTile extends StatelessWidget {
 
   final String title;
   final String subtitle;
-  final String calories;
 
-  const MealCard({
+  const WorkoutTile({
     super.key,
     required this.title,
     required this.subtitle,
-    required this.calories,
   });
 
   @override
@@ -23,27 +21,26 @@ class MealCard extends StatelessWidget {
       margin:
           const EdgeInsets.only(bottom: 16),
 
-      padding: const EdgeInsets.all(16),
+      padding:
+          const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
         color: AppColors.card,
 
         borderRadius:
-            BorderRadius.circular(20),
+            BorderRadius.circular(18),
       ),
 
       child: Row(
         children: [
 
-          Container(
-            width: 70,
-            height: 70,
+          const CircleAvatar(
+            backgroundColor:
+                AppColors.green,
 
-            decoration: BoxDecoration(
-              color: Colors.green,
-
-              borderRadius:
-                  BorderRadius.circular(16),
+            child: Icon(
+              Icons.fitness_center,
+              color: Colors.black,
             ),
           ),
 
@@ -61,7 +58,9 @@ class MealCard extends StatelessWidget {
                   title,
 
                   style: const TextStyle(
-                    color: Colors.white70,
+                    color: Colors.white,
+                    fontWeight:
+                        FontWeight.bold,
                   ),
                 ),
 
@@ -69,23 +68,19 @@ class MealCard extends StatelessWidget {
                   subtitle,
 
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight:
-                        FontWeight.bold,
-                    fontSize: 18,
+                    color: Colors.white54,
                   ),
                 ),
               ],
             ),
           ),
 
-          Text(
-            calories,
+          const Icon(
+            Icons.arrow_forward_ios,
 
-            style: const TextStyle(
-              color: AppColors.green,
-            ),
-          ),
+            color: Colors.white54,
+            size: 16,
+          )
         ],
       ),
     );

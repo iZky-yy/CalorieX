@@ -1,167 +1,341 @@
 import 'package:flutter/material.dart';
+
+import '../../../core/widgets/custom_button.dart';
+import '../../../core/widgets/custom_textfield.dart';
+import '../../../services/auth_service.dart';
+import '../home/home_screen.dart';
 import 'signup_page.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+
   const LoginPage({super.key});
 
   @override
+  State<LoginPage> createState() =>
+      _LoginPageState();
+}
+
+class _LoginPageState
+    extends State<LoginPage> {
+
+  final emailController =
+      TextEditingController();
+
+  final passwordController =
+      TextEditingController();
+
+  bool _isLoading = false;
+
+  final _authService = AuthService();
+
+  Future<void> _handleLogin() async {
+
+    if (emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email dan password tidak boleh kosong'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      final result = await _authService.login(
+        emailController.text.trim(),
+        passwordController.text,
+      );
+
+      if (!mounted) return;
+
+      if (result['status'] == true) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Login berhasil!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const HomeScreen(),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result['message'] ?? 'Login gagal',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       body: Stack(
         children: [
-          /// Background Image
+
+          // background
           Container(
-            decoration: const BoxDecoration(
+            decoration:
+                const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("assets/images/bg.jpg"),
+                image: AssetImage(
+                  "assets/images/bg.jpg",
+                ),
                 fit: BoxFit.cover,
               ),
             ),
           ),
 
-          /// Dark Overlay
+          // overlay
           Container(
-            color: Colors.black.withOpacity(0.7),
+            color:
+                Colors.black.withOpacity(0.7),
           ),
 
-          /// Content
-          Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                /// Logo
-                Column(
-                  children: const [
-                    Icon(Icons.restaurant, color: Colors.greenAccent, size: 60),
-                    SizedBox(height: 10),
-                    Text(
+          // content
+          SafeArea(
+            child: Padding(
+              padding:
+                  const EdgeInsets.all(24),
+
+              child: SingleChildScrollView(
+                child: Column(
+
+                  mainAxisAlignment:
+                      MainAxisAlignment.center,
+
+                  children: [
+
+                    const SizedBox(height: 80),
+
+                    // logo
+                    const Icon(
+                      Icons.restaurant,
+                      color: Colors.greenAccent,
+                      size: 60,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    const Text(
                       "CalorieX",
+
                       style: TextStyle(
                         fontSize: 30,
-                        fontWeight: FontWeight.bold,
+                        fontWeight:
+                            FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                    Text(
+
+                    const SizedBox(height: 10),
+
+                    const Text(
                       "Control your calories\nUnlock your X",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.white70),
+
+                      textAlign:
+                          TextAlign.center,
+
+                      style: TextStyle(
+                        color:
+                            Colors.white70,
+                      ),
                     ),
-                  ],
-                ),
 
-                const SizedBox(height: 40),
+                    const SizedBox(height: 40),
 
-                /// Input Email
-                _buildTextField("Username or Email", Icons.person),
+                    // email
+                    CustomTextField(
+                      hint:
+                          "Username or Email",
 
-                const SizedBox(height: 15),
+                      icon: Icons.person,
 
-                /// Password
-                _buildTextField("Password", Icons.lock, isPassword: true),
+                      controller:
+                          emailController,
+                    ),
 
-                const SizedBox(height: 10),
+                    const SizedBox(height: 15),
 
-                /// Remember + Forgot
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
-                    Row(
+                    // password
+                    CustomTextField(
+                      hint: "Password",
+
+                      icon: Icons.lock,
+
+                      isPassword: true,
+
+                      controller:
+                          passwordController,
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // remember
+                    const Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .spaceBetween,
+
                       children: [
-                        Icon(Icons.check_box, size: 18, color: Colors.greenAccent),
-                        SizedBox(width: 5),
-                        Text("Remember me"),
+
+                        Row(
+                          children: [
+
+                            Icon(
+                              Icons.check_box,
+
+                              size: 18,
+
+                              color:
+                                  Colors.greenAccent,
+                            ),
+
+                            SizedBox(width: 5),
+
+                            Text(
+                              "Remember me",
+
+                              style: TextStyle(
+                                color:
+                                    Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Text(
+                          "Forgot password?",
+
+                          style: TextStyle(
+                            color:
+                                Colors.greenAccent,
+                          ),
+                        ),
                       ],
                     ),
-                    Text("Forgot password?", style: TextStyle(color: Colors.greenAccent))
+
+                    const SizedBox(height: 20),
+
+                    // login button
+                    _isLoading
+                        ? const CircularProgressIndicator(
+                            color: Colors.greenAccent,
+                          )
+                        : CustomButton(
+                            text: "LOG IN",
+                            onPressed: _handleLogin,
+                          ),
+
+                    const SizedBox(height: 20),
+
+                    // social
+                    const Row(
+
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .center,
+
+                      children: [
+
+                        Icon(
+                          Icons.g_mobiledata,
+
+                          size: 40,
+
+                          color: Colors.white,
+                        ),
+
+                        SizedBox(width: 10),
+
+                        Icon(
+                          Icons.apple,
+
+                          size: 30,
+
+                          color: Colors.white,
+                        ),
+
+                        SizedBox(width: 10),
+
+                        Icon(
+                          Icons.facebook,
+
+                          size: 30,
+
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    const Text(
+                      "Track your meals. Plan your workouts.\nBecome your best version.",
+
+                      textAlign:
+                          TextAlign.center,
+
+                      style: TextStyle(
+                        color:
+                            Colors.white60,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    GestureDetector(
+
+                      onTap: () {
+
+                        Navigator.push(
+                          context,
+
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                const SignupPage(),
+                          ),
+                        );
+                      },
+
+                      child: const Text(
+                        "Don't have an account? SIGN UP",
+
+                        style: TextStyle(
+                          color:
+                              Colors.greenAccent,
+                        ),
+                      ),
+                    )
                   ],
                 ),
-
-                const SizedBox(height: 20),
-
-                /// Login Button
-                _buildButton("LOG IN"),
-
-                const SizedBox(height: 20),
-
-                /// Social Login
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.g_mobiledata, size: 40),
-                    SizedBox(width: 10),
-                    Icon(Icons.apple, size: 30),
-                    SizedBox(width: 10),
-                    Icon(Icons.facebook, size: 30),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                /// Footer Text
-                const Text(
-                  "Track your meals. Plan your workouts.\nBecome your best version.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white60),
-                ),
-
-                const SizedBox(height: 20),
-
-                /// Go to Signup
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SignupPage()),
-                    );
-                  },
-                  child: const Text(
-                    "Don't have an account? SIGN UP",
-                    style: TextStyle(color: Colors.greenAccent),
-                  ),
-                )
-              ],
+              ),
             ),
           )
         ],
-      ),
-    );
-  }
-
-  /// TextField Style
-  Widget _buildTextField(String hint, IconData icon,
-      {bool isPassword = false}) {
-    return TextField(
-      obscureText: isPassword,
-      decoration: InputDecoration(
-        prefixIcon: Icon(icon),
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.white10,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
-    );
-  }
-
-  /// Button Style
-  Widget _buildButton(String text) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Colors.greenAccent, Colors.green],
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: MaterialButton(
-        padding: const EdgeInsets.symmetric(vertical: 15),
-        onPressed: () {},
-        child: Text(
-          text,
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
       ),
     );
   }

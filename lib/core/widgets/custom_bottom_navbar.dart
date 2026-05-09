@@ -17,7 +17,6 @@ class CustomBottomNavbar extends StatelessWidget {
 
   void onTabTapped(BuildContext context, int index) {
 
-    // supaya tidak reload halaman yang sama
     if (index == currentIndex) return;
 
     Widget page;
