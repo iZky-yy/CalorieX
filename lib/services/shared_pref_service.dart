@@ -2,6 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefService {
 
+  static const String tokenKey = 'token';
+
   static Future<void> saveToken(
     String token,
   ) async {
@@ -10,7 +12,7 @@ class SharedPrefService {
         await SharedPreferences.getInstance();
 
     await prefs.setString(
-      'token',
+      tokenKey,
       token,
     );
   }
@@ -20,7 +22,7 @@ class SharedPrefService {
     final prefs =
         await SharedPreferences.getInstance();
 
-    return prefs.getString('token');
+    return prefs.getString(tokenKey);
   }
 
   static Future<void> logout() async {
@@ -28,6 +30,6 @@ class SharedPrefService {
     final prefs =
         await SharedPreferences.getInstance();
 
-    await prefs.clear();
+    await prefs.remove(tokenKey);
   }
 }

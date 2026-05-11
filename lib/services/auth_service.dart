@@ -8,20 +8,25 @@ import 'shared_pref_service.dart';
 
 class AuthService {
 
+  // LOGIN
   Future<Map<String, dynamic>> login(
     String email,
     String password,
   ) async {
 
     try {
+
       final response = await http.post(
+
         Uri.parse(
           '${ApiService.baseUrl}/login',
         ),
+
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+
         body: jsonEncode({
           'email': email,
           'password': password,
@@ -30,18 +35,29 @@ class AuthService {
 
       final data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 &&
+          data['status'] == true) {
+
         await SharedPrefService.saveToken(
           data['token'],
         );
+
+        return {
+          'status': true,
+          'message': data['message'],
+        };
       }
 
-      return data;
-
-    } catch (e) {
       return {
         'status': false,
-        'message': 'Tidak dapat terhubung ke server. Pastikan API sudah berjalan.\nDetail: $e',
+        'message': data['message'],
+      };
+
+    } catch (e) {
+
+      return {
+        'status': false,
+        'message': 'Server tidak dapat diakses',
       };
     }
   }
@@ -53,14 +69,18 @@ class AuthService {
   ) async {
 
     try {
+
       final response = await http.post(
+
         Uri.parse(
           '${ApiService.baseUrl}/register',
         ),
+
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },
+
         body: jsonEncode({
           'name': name,
           'email': email,
@@ -70,12 +90,25 @@ class AuthService {
 
       final data = jsonDecode(response.body);
 
-      return data;
+      if (response.statusCode == 200 ||
+          response.statusCode == 201) {
 
-    } catch (e) {
+        return {
+          'status': true,
+          'message': data['message'],
+        };
+      }
+
       return {
         'status': false,
-        'message': 'Tidak dapat terhubung ke server. Pastikan API sudah berjalan.\nDetail: $e',
+        'message': data['message'],
+      };
+
+    } catch (e) {
+
+      return {
+        'status': false,
+        'message': 'Server tidak dapat diakses',
       };
     }
   }
@@ -83,13 +116,16 @@ class AuthService {
   Future<UserModel?> getProfile() async {
 
     try {
+
       final token =
           await SharedPrefService.getToken();
 
       final response = await http.get(
+
         Uri.parse(
-          '${ApiService.baseUrl}/profile',
+          '${ApiService.baseUrl}/user',
         ),
+
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -99,12 +135,14 @@ class AuthService {
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 200) {
-        return UserModel.fromJson(data['user']);
+
+        return UserModel.fromJson(data);
       }
 
       return null;
 
     } catch (e) {
+
       return null;
     }
   }
